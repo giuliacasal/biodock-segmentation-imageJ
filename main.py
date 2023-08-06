@@ -38,5 +38,3 @@ with open('input/64ca5412fbb8640014c9fcc2_objects.json') as maskfile:
     print(polygon_output)
 
     save_fiji_format(polygon_output)
-
-    # print_hex(first_image_masks)

@@ -21,7 +21,7 @@ def convert_encoded_binary_mask_to_image(mask, first_image_masks, width, height,
     return mask
 
 
-def convert_binary_mask_file_to_tif(file_name):
+def convert_binary_mask_file_to_tif(file_name, output_path):
     with open(file_name) as maskfile:
         mask_results = json.load(maskfile)
         first_image_objects_encoded = mask_results["objects"]
@@ -36,7 +36,7 @@ def convert_binary_mask_file_to_tif(file_name):
                 mask_results["height"], obj["bbox"])
 
             im = Image.fromarray(image_mask)
-            im.save("output/mask-" + mask_results["filename"])
+            im.save(output_path + "mask-" + mask_results["filename"])
 
     print(f"Binary masks returned {len(first_image_masks)}")
 
@@ -49,10 +49,10 @@ def read_binary_mask_files_for_dir(directory_path):
     return file_list
 
 
-def create_binary_masks(directory_path):
-    binary_mask_files = read_binary_mask_files_for_dir(directory_path)
+def create_binary_masks(input_path, output_path):
+    binary_mask_files = read_binary_mask_files_for_dir(input_path)
     for binary_mask_file in binary_mask_files:
-        convert_binary_mask_file_to_tif(directory_path + binary_mask_file)
+        convert_binary_mask_file_to_tif(input_path + binary_mask_file, output_path)
 
 
-create_binary_masks('input/J7784 BV2 10nm masks data/')
+create_binary_masks('input/J7784 BV2 10nm masks data/', 'output/')

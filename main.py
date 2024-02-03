@@ -23,8 +23,14 @@ def convert_encoded_binary_mask_to_image(mask, first_image_masks, width, height,
 
 def convert_binary_mask_file_to_tif(file_name, output_path):
     with open(file_name) as maskfile:
+        print(maskfile)
         mask_results = json.load(maskfile)
         first_image_objects_encoded = mask_results["objects"]
+        if not first_image_objects_encoded:
+            imagesize = mask_results["height"], mask_results["width"]
+            mask = np.zeros(imagesize)
+            im = Image.fromarray(mask)
+            im.save(output_path + "mask-" + mask_results["filename"])
 
         first_image_masks = []
         for obj in first_image_objects_encoded.values():
@@ -52,7 +58,10 @@ def read_binary_mask_files_for_dir(directory_path):
 def create_binary_masks(input_path, output_path):
     binary_mask_files = read_binary_mask_files_for_dir(input_path)
     for binary_mask_file in binary_mask_files:
+        if not binary_mask_file.endswith('.json'):
+            continue
+        print(binary_mask_file)
         convert_binary_mask_file_to_tif(input_path + binary_mask_file, output_path)
 
 
-create_binary_masks('input/J7784 BV2 10nm masks data/', 'output/')
+create_binary_masks('input/J7784 bv1 nuclei masks data/', 'output/')
